@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 
 // Health check route
 app.get('/health', (req, res) => {
+  console.log('Health check route');
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
