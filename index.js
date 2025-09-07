@@ -26,6 +26,11 @@ app.get('/test', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+app.get('/staging', (req, res) => {
+  console.log('staging route');
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
