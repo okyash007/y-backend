@@ -1,9 +1,6 @@
-import { Fingerprint, IDevice } from "../types";
 import Device from "../models/Device.js";
 
-export const createDevice = async (
-  fingerprint: Fingerprint
-): Promise<IDevice> => {
+export const createDevice = async (fingerprint) => {
   const deviceData = {
     fingerprint: fingerprint.hash,
     ipAddress: fingerprint.components.deviceConsistent?.ipAddress || "",

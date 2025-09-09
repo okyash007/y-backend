@@ -1,15 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
-
-export const responseTimeMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  const startTime: number = Date.now();
-  const requestTimestamp: string = new Date().toISOString();
+export const responseTimeMiddleware = (req, res, next) => {
+  const startTime = Date.now();
+  const requestTimestamp = new Date().toISOString();
 
   // Override the res.end method to capture when the response is sent
   const originalEnd = res.end;
-  res.end = function (...args: any[]): Response {
-    const endTime: number = Date.now();
-    const responseTime: number = endTime - startTime;
-    const responseTimestamp: string = new Date().toISOString();
+  res.end = function (...args) {
+    const endTime = Date.now();
+    const responseTime = endTime - startTime;
+    const responseTimestamp = new Date().toISOString();
 
     // Add response time and timestamps to headers
     res.set("X-Response-Time", `${responseTime}ms`);
@@ -22,7 +20,7 @@ export const responseTimeMiddleware = (req: Request, res: Response, next: NextFu
     );
 
     // Call the original end method
-    return (originalEnd as any).apply(this, args);
+    return originalEnd.apply(this, args);
   };
 
   next();

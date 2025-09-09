@@ -1,7 +1,6 @@
-import mongoose, { Schema, Model } from 'mongoose';
-import { IBlog } from '../types/index.js';
+import mongoose, { Schema } from 'mongoose';
 
-const blogSchema = new Schema<IBlog>(
+const blogSchema = new Schema(
   {
     title: {
       type: String,
@@ -42,6 +41,6 @@ const blogSchema = new Schema<IBlog>(
   }
 );
 
-const Blog: Model<IBlog> = mongoose.model<IBlog>("blogs", blogSchema);
+const Blog = mongoose.model("blogs", blogSchema);
 
 export default Blog;

@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express from "express";
 import "dotenv/config.js";
 import connectDB from "./config/database.js";
 import { responseTimeMiddleware } from "./middlewares/response.middleware.js";
@@ -10,13 +10,12 @@ import path from "path";
 import cors from "cors";
 import router from "./routes/index.js";
 import { fingerprintMiddleware } from "./middlewares/fingerprint.middleware.js";
-import { StandardResponse } from "./types/index.js";
 
-const __filename: string = fileURLToPath(import.meta.url);
-const __dirname: string = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const app: Application = express();
-const PORT: number = parseInt(process.env.PORT || "8080", 10);
+const app = express();
+const PORT = parseInt(process.env.PORT || "8080", 10);
 
 // Connect to MongoDB
 connectDB();
@@ -44,7 +43,7 @@ app.use(
 // Fingerprint middleware
 app.use(fingerprintMiddleware);
 
-app.get("/fp", (req: Request, res: Response): void => {
+app.get("/fp", (req, res) => {
   console.log("User fingerprint:", req.fingerprint?.hash);
   console.log(
     "Fingerprint components:",
@@ -59,8 +58,8 @@ app.get("/fp", (req: Request, res: Response): void => {
 app.use("/", router);
 
 // Health check route
-app.get("/health", (_req: Request, res: Response): void => {
-  const response: StandardResponse = {
+app.get("/health", (_req, res) => {
+  const response = {
     status: "OK",
     timestamp: new Date().toISOString()
   };
@@ -71,6 +70,6 @@ app.get("/health", (_req: Request, res: Response): void => {
 app.use(errorMiddleWare);
 
 // Start the server
-app.listen(PORT, (): void => {
+app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

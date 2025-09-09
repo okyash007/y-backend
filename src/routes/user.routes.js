@@ -1,7 +1,7 @@
-import express, { Router } from "express";
+import express from "express";
 import { authUser, identifyUser } from '../controllers/user.controller.js';
 
-const router: Router = express.Router();
+const router = express.Router();
 
 router.get("/auth", authUser);
 router.post("/identify", identifyUser);

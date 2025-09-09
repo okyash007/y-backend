@@ -1,7 +1,6 @@
-import mongoose, { Schema, Model } from 'mongoose';
-import { IDevice } from '../types/index.js';
+import mongoose, { Schema } from 'mongoose';
 
-const deviceSchema = new Schema<IDevice>(
+const deviceSchema = new Schema(
   {
     fingerprint: {
       type: String,
@@ -47,6 +46,6 @@ const deviceSchema = new Schema<IDevice>(
   }
 );
 
-const Device: Model<IDevice> = mongoose.model<IDevice>("devices", deviceSchema);
+const Device = mongoose.model("devices", deviceSchema);
 
 export default Device;

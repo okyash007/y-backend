@@ -1,13 +1,5 @@
-import { IApiResponse } from '../types/index.js';
-
-export class ApiResponse<T = any> implements IApiResponse<T> {
-  public statusCode: number;
-  public data: T;
-  public message: string;
-  public success: boolean;
-  [key: string]: any;
-
-  constructor(statusCode: number, data: T, message: string = "Success", randomFields: Record<string, any> = {}) {
+export class ApiResponse {
+  constructor(statusCode, data, message = "Success", randomFields = {}) {
     this.statusCode = statusCode;
     this.data = data;
     this.message = message;

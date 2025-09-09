@@ -1,10 +1,8 @@
-import { Request, Response } from 'express';
 import { ApiResponse } from '../utils/ApiResponse.js';
-import { StandardResponse } from '../types/index.js';
 import catchAsync from '../utils/catchAsync.js';
 
-export const createBlog = catchAsync(async (_req: Request, res: Response): Promise<void> => {
-  const response: StandardResponse = {
+export const createBlog = catchAsync(async (_req, res) => {
+  const response = {
     status: "OK",
     timestamp: new Date().toISOString()
   };
@@ -12,10 +10,10 @@ export const createBlog = catchAsync(async (_req: Request, res: Response): Promi
   res.json(new ApiResponse(200, response, "Blog creation endpoint"));
 });
 
-export const getBlogBySlug = catchAsync(async (req: Request, res: Response): Promise<void> => {
+export const getBlogBySlug = catchAsync(async (req, res) => {
   const { slug } = req.params;
   
-  const response: StandardResponse & { slug: string } = {
+  const response = {
     status: "OK",
     timestamp: new Date().toISOString(),
     slug

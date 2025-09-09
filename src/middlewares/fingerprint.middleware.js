@@ -1,16 +1,61 @@
 import fingerprint from "express-fingerprint";
-import { Request, Response, NextFunction } from 'express';
 import { ApiResponse } from '../utils/ApiResponse.js';
-import { FingerprintResultSchema, FingerprintSchema, Fingerprint } from '../types/index.js';
 import { z } from 'zod';
 
+// Zod schemas for validation
+const FingerprintComponentsSchema = z.object({
+  useragent: z.object({
+    browser: z.string(),
+    version: z.string(),
+    os: z.string(),
+    platform: z.string(),
+    source: z.string(),
+  }).optional(),
+  acceptHeaders: z.object({
+    accept: z.string(),
+    encoding: z.string(),
+    language: z.string(),
+  }).optional(),
+  geoip: z.object({
+    country: z.string(),
+    region: z.string(),
+    eu: z.string(),
+    timezone: z.string(),
+    city: z.string(),
+    ll: z.array(z.number()),
+    metro: z.number(),
+    area: z.number(),
+  }).optional(),
+  deviceConsistent: z.object({
+    os: z.string(),
+    platform: z.string(),
+    language: z.string(),
+    timezone: z.string(),
+    ipAddress: z.string(),
+  }).optional(),
+});
+
+const FingerprintSchema = z.object({
+  hash: z.string(),
+  components: FingerprintComponentsSchema,
+});
+
+// Zod schema for express-fingerprint result (can be array-based or object-based components)
+const FingerprintResultSchema = z.object({
+  hash: z.string(),
+  components: z.union([
+    z.array(z.record(z.string(), z.any())), // Array format (original express-fingerprint)
+    z.record(z.string(), z.any()) // Object format (sometimes returned)
+  ]).optional(),
+});
+
 // Convert express-fingerprint result to our Fingerprint format using Zod validation
-const convertAndValidateFingerprint = (fpResult: unknown): Fingerprint => {
+const convertAndValidateFingerprint = (fpResult) => {
   // First validate the input as FingerprintResult
   const validatedResult = FingerprintResultSchema.parse(fpResult);
   
   // Handle both array-based and object-based components
-  let components: any = {};
+  let components = {};
   if (validatedResult.components) {
     if (Array.isArray(validatedResult.components)) {
       // Array format - merge all objects in the array
@@ -24,7 +69,7 @@ const convertAndValidateFingerprint = (fpResult: unknown): Fingerprint => {
   }
   
   // Create and validate the final Fingerprint object
-  const fingerprint: Fingerprint = {
+  const fingerprint = {
     hash: validatedResult.hash,
     components
   };
@@ -38,9 +83,9 @@ const baseFingerprintMiddleware = fingerprint({
     // fingerprint.useragent,
     // fingerprint.acceptHeaders,
     // Custom parameter for device-consistent info
-    function (this: { req: Request }, next: (err: Error, result?: any) => void) {
+    function (next) {
       const req = this.req;
-      const userAgent: string = req.headers["user-agent"] || "";
+      const userAgent = req.headers["user-agent"] || "";
 
       // Extract OS and device info that's more consistent across browsers
       const osMatch = userAgent.match(
@@ -51,14 +96,14 @@ const baseFingerprintMiddleware = fingerprint({
       );
 
       // Get client IP address (handles proxies and load balancers)
-      const getClientIP = (req: Request): string => {
+      const getClientIP = (req) => {
         const forwarded = req.headers["x-forwarded-for"];
         return (
           (Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(",")[0]?.trim()) ||
-          req.headers["x-real-ip"] as string ||
-          req.headers["x-client-ip"] as string ||
-          (req as any).connection?.remoteAddress ||
-          (req as any).socket?.remoteAddress ||
+          req.headers["x-real-ip"] ||
+          req.headers["x-client-ip"] ||
+          req.connection?.remoteAddress ||
+          req.socket?.remoteAddress ||
           req.ip ||
           "Unknown"
         );
@@ -73,19 +118,19 @@ const baseFingerprintMiddleware = fingerprint({
           ? req.headers["accept-language"].split(",")[0]
           : "Unknown",
         // Timezone from headers (if available)
-        timezone: (req.headers["x-timezone"] as string) || "Unknown",
+        timezone: req.headers["x-timezone"] || "Unknown",
         // IP address - very consistent across browsers on same device/network
         ipAddress: getClientIP(req),
       };
 
-      next(null as any, { deviceConsistent: deviceInfo });
+      next(null, { deviceConsistent: deviceInfo });
     },
   ],
 });
 
 // Wrapper middleware that ensures fingerprint is always available
-export const fingerprintMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  baseFingerprintMiddleware(req, res, (err): void => {
+export const fingerprintMiddleware = (req, res, next) => {
+  baseFingerprintMiddleware(req, res, (err) => {
     if (err) {
       res.status(500).json(new ApiResponse(500, null, "Error generating fingerprint"));
       return;
@@ -102,7 +147,7 @@ export const fingerprintMiddleware = (req: Request, res: Response, next: NextFun
       const validatedFingerprint = convertAndValidateFingerprint(req.fingerprint);
       
       // Replace the original fingerprint with the validated one
-      (req as any).fingerprint = validatedFingerprint;
+      req.fingerprint = validatedFingerprint;
       
       next();
     } catch (validationError) {

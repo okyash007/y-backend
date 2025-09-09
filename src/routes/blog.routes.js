@@ -1,7 +1,7 @@
-import express, { Router } from 'express';
+import express from 'express';
 import { createBlog, getBlogBySlug } from '../controllers/blog.controller.js';
 
-const router: Router = express.Router();
+const router = express.Router();
 
 router.post('/create', createBlog);
 router.get('/:slug', getBlogBySlug);

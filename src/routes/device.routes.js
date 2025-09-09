@@ -1,8 +1,8 @@
-import express, { Router } from 'express';
+import express from 'express';
 import { createDeviceController } from '../controllers/device.controller.js';
 import { deviceMiddleware } from '../middlewares/device.middleware.js';
 
-const router: Router = express.Router();
+const router = express.Router();
 
 router.get('/', deviceMiddleware, createDeviceController);
 

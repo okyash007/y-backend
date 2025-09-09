@@ -1,7 +1,6 @@
-import mongoose, { Schema, Model } from 'mongoose';
-import { IUser } from '../types/index.js';
+import mongoose, { Schema } from 'mongoose';
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -46,6 +45,6 @@ const userSchema = new Schema<IUser>(
 userSchema.index({ email: 1 });
 userSchema.index({ createdAt: -1 });
 
-const User: Model<IUser> = mongoose.model<IUser>("users", userSchema);
+const User = mongoose.model("users", userSchema);
 
 export default User;
