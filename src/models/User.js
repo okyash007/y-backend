@@ -5,6 +5,7 @@ const userSchema = new Schema(
     name: {
       type: String,
       maxlength: [50, "Name cannot exceed 50 characters"],
+      required: [true, "Name is required"],
     },
     email: {
       type: String,
@@ -23,8 +24,9 @@ const userSchema = new Schema(
     password: {
       type: String,
       minlength: [8, "Password must be at least 8 characters long"],
+      required: [true, "Password is required"],
     },
-    display_id: {
+    displayId: {
       type: String,
       required: [true, "Display ID is required"],
       unique: true,

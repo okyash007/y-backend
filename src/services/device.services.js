@@ -1,6 +1,6 @@
 import Device from "../models/Device.js";
 
-export const createDevice = async (fingerprint) => {
+export const syncDevice = async (fingerprint) => {
   const deviceData = {
     fingerprint: fingerprint.hash,
     ipAddress: fingerprint.components.deviceConsistent?.ipAddress || "",
@@ -27,12 +27,20 @@ export const createDevice = async (fingerprint) => {
   const device = await Device.findOneAndUpdate(
     { fingerprint: fingerprint.hash }, // filter
     { $setOnInsert: deviceData }, // only set data if inserting (creating new)
-    { 
+    {
       upsert: true, // create if doesn't exist
       new: true, // return the updated/created document
-      runValidators: true // run schema validations
+      runValidators: true, // run schema validations
     }
-  );
+  ).populate("user", "name email display_id role verified");
 
+  return device;
+};
+
+export const updateDevice = async (deviceId, deviceData, session = null) => {
+  const device = await Device.findByIdAndUpdate(deviceId, deviceData, {
+    new: true,
+    session, // add session for transaction support
+  }).populate("user", "name email display_id role verified");
   return device;
 };

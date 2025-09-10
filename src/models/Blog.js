@@ -17,10 +17,10 @@ const blogSchema = new Schema(
       required: [true, "Content is required"],
       trim: true,
     },
-    author: {
+    device: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-      required: [true, "Author is required"],
+      ref: "devices",
+      required: [true, "Device is required"],
     },
     // category: {
     //   type: String,

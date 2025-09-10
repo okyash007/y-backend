@@ -1,9 +1,9 @@
 import express from "express";
-import { authUser, identifyUser } from '../controllers/user.controller.js';
+import { identifyUser } from '../controllers/user.controller.js';
+import { deviceMiddleware } from "../middlewares/device.middleware.js";
 
 const router = express.Router();
 
-router.get("/auth", authUser);
-router.post("/identify", identifyUser);
+router.post("/identify", deviceMiddleware, identifyUser);
 
 export default router;

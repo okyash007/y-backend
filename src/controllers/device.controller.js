@@ -1,6 +1,6 @@
 import { ApiResponse } from "../utils/ApiResponse.js";
 import _ from "lodash";
 
-export const createDeviceController = (req, res) => {
-  res.json(new ApiResponse(200, req.yDevice, "Device creation endpoint"));
+export const syncDeviceController = (req, res) => {
+  res.json(new ApiResponse(200, req.yDevice, "Device synced"));
 };
