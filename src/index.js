@@ -34,7 +34,7 @@ app.use(express.json());
 // CORS middleware
 app.use(
   cors({
-    origin: ["http://yash.host", "*"],
+    origin: "*",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"],
     credentials: true,
   })
