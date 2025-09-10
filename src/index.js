@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(cors());
 
 // Fingerprint middleware
-// app.use(fingerprintMiddleware);
+app.use(fingerprintMiddleware);
 
 // Routes
 app.use("/", router);
