@@ -31,8 +31,13 @@ app.use(express.static(__dirname + "/public"));
 app.use(cookieParser());
 app.use(express.json());
 
-// CORS middleware
-app.use(cors());
+// CORS middleware - Allow all origins
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
 // Fingerprint middleware
 app.use(fingerprintMiddleware);
