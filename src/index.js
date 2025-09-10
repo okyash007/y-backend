@@ -35,17 +35,7 @@ app.use(express.json());
 app.use(cors());
 
 // Fingerprint middleware
-app.use(fingerprintMiddleware);
-
-app.get("/fp", (req, res) => {
-  console.log("User fingerprint:", req.fingerprint?.hash);
-  console.log(
-    "Fingerprint components:",
-    JSON.stringify(req.fingerprint?.components, null, 2)
-  );
-
-  res.json(req.fingerprint);
-});
+// app.use(fingerprintMiddleware);
 
 // Routes
 app.use("/", router);
