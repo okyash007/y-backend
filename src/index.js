@@ -17,6 +17,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = parseInt(process.env.PORT || "8080", 10);
 
+
+
 // Connect to MongoDB
 connectDB();
 
@@ -32,27 +34,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 // CORS middleware
-app.use(cors({
-  origin: [
-    'https://yash.host',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://localhost:3000',
-    'https://localhost:3001'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
-// Additional security headers
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('X-Content-Type-Options', 'nosniff');
-  res.header('X-Frame-Options', 'DENY');
-  res.header('X-XSS-Protection', '1; mode=block');
-  next();
-});
+app.use(cors());
 
 // Fingerprint middleware
 // app.use(fingerprintMiddleware);
