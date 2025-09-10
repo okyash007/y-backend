@@ -32,13 +32,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 // CORS middleware
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // Fingerprint middleware
 app.use(fingerprintMiddleware);
@@ -50,7 +44,6 @@ app.get("/fp", (req, res) => {
     JSON.stringify(req.fingerprint?.components, null, 2)
   );
 
-  
   res.json(req.fingerprint);
 });
 
@@ -61,7 +54,7 @@ app.use("/", router);
 app.get("/health", (_req, res) => {
   const response = {
     status: "OK",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
   res.json(response);
 });
