@@ -32,7 +32,7 @@ export const syncDevice = async (fingerprint) => {
       new: true, // return the updated/created document
       runValidators: true, // run schema validations
     }
-  ).populate("user", "name email display_id role verified");
+  ).populate("user", "name email displayId role verified");
 
   return device;
 };
