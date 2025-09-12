@@ -9,7 +9,6 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
-      unique: true,
       lowercase: true,
       trim: true,
       match: [
@@ -44,7 +43,7 @@ const userSchema = new Schema(
 );
 
 // Index for better query performance
-userSchema.index({ email: 1 });
+userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ createdAt: -1 });
 
 const User = mongoose.model("users", userSchema);

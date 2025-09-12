@@ -46,6 +46,11 @@ const deviceSchema = new Schema(
   }
 );
 
+// Create indexes for optimal query performance
+deviceSchema.index({ fingerprint: 1 }, { unique: true }); // Primary index for main query filter
+deviceSchema.index({ user: 1 }); // Secondary index for populate operations
+deviceSchema.index({ createdAt: -1 }); // Index for timestamp-based queries (optional but useful)
+
 const Device = mongoose.model("devices", deviceSchema);
 
 export default Device;

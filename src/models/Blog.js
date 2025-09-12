@@ -5,17 +5,15 @@ const blogSchema = new Schema(
     title: {
       type: String,
       required: [true, "Title is required"],
-      trim: true,
     },
     slug: {
       type: String,
       required: [true, "Slug is required"],
-      trim: true,
+      unique: true,
     },
     content: {
       type: String,
       required: [true, "Content is required"],
-      trim: true,
     },
     device: {
       type: mongoose.Schema.Types.ObjectId,
